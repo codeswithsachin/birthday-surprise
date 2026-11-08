@@ -1,0 +1,11 @@
+node_modules
+dist
+.DS_Store
+*.local
+
+# Keep private photos and music out of public repositories.
+# Remove these two lines only if your repository is private.
+public/photos/*
+public/music/*
+!public/photos/README.txt
+!public/music/README.txt

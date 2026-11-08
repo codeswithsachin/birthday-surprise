@@ -1,0 +1,807 @@
+/* ==========================================================================
+   Chapters 7 to 13
+   ========================================================================== */
+
+/* ---------- 7. open when letters ---------- */
+.ow-grid {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px 14px;
+  justify-items: center;
+}
+.ow-item {
+  width: 100%;
+  max-width: 230px;
+}
+.ow-item:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}
+.ow-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  cursor: pointer;
+  transition: transform 0.35s var(--ease);
+}
+.ow-btn:hover {
+  transform: translateY(-5px) rotate(-1.2deg);
+}
+.ow-env {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+.ow-read {
+  position: absolute;
+  right: -6px;
+  top: -8px;
+  z-index: 5;
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--rose);
+  box-shadow: var(--shadow-sm);
+}
+.ow-label {
+  font-family: var(--hand);
+  font-size: 1.3rem;
+  line-height: 1.15;
+  color: var(--wine);
+  text-wrap: balance;
+}
+.ow-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 95;
+  overflow-y: auto;
+  background: rgba(42, 22, 48, 0.58);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+.ow-stage {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 56px 16px 34px;
+}
+.ow-env-big {
+  width: min(250px, 66vw);
+}
+.ow-letter {
+  position: relative;
+  width: min(520px, 92vw);
+  margin-top: -28px;
+  padding: 28px 26px 24px;
+  border-radius: 8px;
+  text-align: center;
+  background: #fffdf8;
+  box-shadow:
+    0 22px 50px rgba(0, 0, 0, 0.3),
+    inset 0 0 0 1px rgba(217, 187, 133, 0.35);
+  transform-origin: top center;
+}
+.ow-body {
+  margin: 12px 0 14px;
+  font-family: var(--serif-soft);
+  font-size: clamp(1.2rem, 3.4vw, 1.4rem);
+  font-weight: 500;
+  line-height: 1.6;
+  color: var(--wine);
+  text-wrap: pretty;
+}
+.ow-sign {
+  font-size: 1.6rem;
+}
+.ow-heart {
+  margin-top: 4px;
+}
+
+/* ---------- 8. games ---------- */
+.games-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+  align-items: start;
+  margin-top: 6px;
+}
+.game {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 18px 18px;
+}
+.game-help {
+  font-size: 0.95rem;
+  color: var(--brown);
+  max-width: 28rem;
+}
+.heart-field {
+  position: relative;
+  width: 100%;
+  height: 230px;
+  overflow: hidden;
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.8), transparent 60%),
+    rgba(246, 220, 229, 0.55);
+}
+.catch-heart {
+  position: absolute;
+  cursor: pointer;
+  animation:
+    popIn 0.35s var(--ease) both,
+    heartBob 2.4s ease-in-out infinite;
+  transition: transform 0.15s;
+}
+.catch-heart:active {
+  transform: scale(0.85);
+}
+@keyframes popIn {
+  from {
+    opacity: 0;
+    scale: 0.3;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+@keyframes heartBob {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -8px;
+  }
+}
+.game-win {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  font-size: 1.55rem;
+  line-height: 1.25;
+  text-wrap: balance;
+}
+.star-field + .game-win {
+  position: static;
+  padding: 4px 6px;
+}
+.score {
+  display: flex;
+  gap: 6px;
+  margin: 0;
+}
+.gift-row {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  align-items: start;
+}
+.gift-pick {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  cursor: pointer;
+  transition: transform 0.3s var(--ease);
+}
+.gift-pick:hover {
+  transform: translateY(-4px) rotate(-2deg);
+}
+.gift-pick.is-open {
+  transform: scale(1.05);
+}
+.gift-pick-art {
+  width: min(84px, 100%);
+  height: auto;
+}
+.gift-label {
+  font-size: 0.82rem;
+  font-weight: 500;
+  line-height: 1.25;
+}
+.gift-text {
+  margin-top: 8px;
+  font-size: 1.25rem;
+  line-height: 1.2;
+}
+.star-field {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #e8f0fb 0%, #f7e8ee 62%, #d8e8cf 100%);
+}
+.sf-cloud {
+  position: absolute;
+  width: 90px;
+  opacity: 0.9;
+}
+.sf-c1 {
+  top: 8%;
+  left: 6%;
+}
+.sf-c2 {
+  top: 20%;
+  right: 4%;
+  width: 70px;
+}
+.sf-flower {
+  position: absolute;
+  width: 34px;
+  height: auto;
+  transform: translate(-50%, -50%);
+}
+.sf-decoy {
+  position: absolute;
+  opacity: 0.8;
+}
+.hidden-star {
+  position: absolute;
+  left: 63%;
+  top: 36%;
+  width: 26px;
+  height: 26px;
+  cursor: pointer;
+  opacity: 0.6;
+  animation: starPulse 2.8s ease-in-out infinite;
+}
+.hidden-star::after {
+  content: '';
+  position: absolute;
+  inset: -12px;
+}
+.hidden-star.is-found {
+  opacity: 1;
+  animation: none;
+  scale: 1.6;
+  filter: drop-shadow(0 0 8px rgba(217, 187, 133, 0.95));
+}
+
+/* ---------- 9. cake ---------- */
+.cake-wrap {
+  position: relative;
+  width: min(340px, 80vw);
+  margin: 0 auto;
+}
+.cake-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.cake-sparks {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.cs {
+  position: absolute;
+  left: 50%;
+  top: 28%;
+  animation: sparkOut 1.3s ease-out forwards;
+}
+@keyframes sparkOut {
+  0% {
+    opacity: 0;
+    transform: rotate(var(--a)) translateY(0) scale(0.3);
+  }
+  25% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(var(--a)) translateY(-110px) scale(1);
+  }
+}
+.cake-msg-wrap {
+  min-height: 130px;
+  max-width: 34rem;
+}
+
+/* ---------- 10. letter ---------- */
+.letter-title {
+  max-width: 28ch;
+}
+.letter-closed {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+.paper {
+  position: relative;
+  width: min(680px, 100%);
+  padding: 44px clamp(22px, 6vw, 56px) 36px;
+  text-align: left;
+  border-radius: 6px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.55), transparent 30%),
+    #fffcf5;
+  box-shadow:
+    0 24px 50px rgba(84, 45, 64, 0.2),
+    inset 0 0 0 1px rgba(217, 187, 133, 0.4);
+  perspective: 1200px;
+}
+.pressed {
+  position: absolute;
+  top: 14px;
+  right: 20px;
+  width: 54px;
+  height: auto;
+  transform: rotate(14deg);
+  opacity: 0.92;
+}
+.paper-greeting {
+  margin-bottom: 18px;
+  font-size: clamp(1.9rem, 5vw, 2.5rem);
+}
+.paper-p {
+  margin: 0 0 1.05em;
+  font-family: var(--serif-soft);
+  font-size: clamp(1.15rem, 2.8vw, 1.32rem);
+  font-weight: 500;
+  line-height: 1.7;
+  color: #4b2a3a;
+  text-wrap: pretty;
+}
+.paper-strong {
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--wine);
+}
+.paper-sign {
+  margin-top: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.sign-off {
+  font-size: 1.5rem;
+}
+.signature {
+  font-size: clamp(2.1rem, 6vw, 2.8rem);
+  color: var(--wine);
+}
+.show-all {
+  margin-top: 18px;
+}
+
+/* ---------- 11. sky ---------- */
+.moon-glow {
+  width: 84px;
+  height: 84px;
+  filter: drop-shadow(0 0 26px rgba(255, 233, 190, 0.6));
+}
+.moon-art {
+  width: 100%;
+  height: 100%;
+}
+.scene-sky .h-serif {
+  color: #fff4ea;
+}
+.scene-sky .hint {
+  color: #f3dfd0;
+}
+.sky-count {
+  margin-left: 6px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: rgba(255, 244, 234, 0.14);
+}
+.sky-field {
+  position: relative;
+  width: min(760px, 100%);
+  height: clamp(280px, 44vh, 420px);
+}
+.sky-lines {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.sky-star {
+  position: absolute;
+  width: 46px;
+  height: 46px;
+  padding: 11px;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  animation: starPulse 3.2s ease-in-out infinite;
+  transition: filter 0.4s;
+}
+.sky-star.is-found {
+  filter: drop-shadow(0 0 8px rgba(217, 187, 133, 0.9));
+}
+.sky-star.is-current {
+  scale: 1.45;
+  animation: none;
+  filter: drop-shadow(0 0 12px rgba(255, 233, 190, 1));
+}
+@keyframes starPulse {
+  0%,
+  100% {
+    opacity: 0.65;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+.sky-wish {
+  min-height: 150px;
+  max-width: 34rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+.wish-now {
+  font-size: clamp(1.6rem, 5vw, 2.1rem);
+  line-height: 1.2;
+  color: #fff4ea;
+  text-wrap: balance;
+}
+.sky-finale {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+.sky-lede {
+  color: #f3dfd0;
+}
+
+/* ---------- 12. gift ---------- */
+.gbox {
+  position: relative;
+  width: 210px;
+  height: 200px;
+  margin: 46px auto 4px;
+}
+.gbox-glow {
+  position: absolute;
+  left: 50%;
+  top: 40px;
+  width: 260px;
+  height: 260px;
+  margin-left: -130px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 233, 190, 0.95), transparent 66%);
+  opacity: 0;
+  transition: opacity 1s;
+}
+.gbox.is-open .gbox-glow {
+  opacity: 1;
+}
+.gbox-body {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 0;
+  height: 112px;
+  border-radius: 6px 6px 14px 14px;
+  background: linear-gradient(160deg, #ebb0c1, #d995aa 60%, #c9809a);
+  box-shadow: 0 16px 28px rgba(84, 45, 64, 0.25);
+  overflow: hidden;
+}
+.gbox-ribbon-v {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 32px;
+  margin-left: -16px;
+  background: linear-gradient(90deg, #e3c590, #f3e1b8 45%, #d9bb85);
+  transform-origin: center;
+  transition: transform 0.9s var(--ease);
+}
+.gbox.is-loosen .gbox-ribbon-v,
+.gbox.is-open .gbox-ribbon-v {
+  transform: scaleX(0.55);
+}
+.gbox-ribbon-h {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 40px;
+  height: 22px;
+  background: linear-gradient(180deg, #f3e1b8, #d9bb85);
+  box-shadow: 0 2px 4px rgba(84, 45, 64, 0.2);
+  transition:
+    transform 0.9s var(--ease),
+    opacity 0.7s 0.2s;
+}
+.gbox.is-loosen .gbox-ribbon-h {
+  transform: scaleY(0.5) translateY(10px);
+  opacity: 0.7;
+}
+.gbox.is-open .gbox-ribbon-h {
+  opacity: 0;
+}
+.gbox-lid {
+  position: absolute;
+  left: 4px;
+  right: 4px;
+  top: 52px;
+  height: 40px;
+  z-index: 3;
+  border-radius: 8px;
+  background: linear-gradient(160deg, #f1bccb, #dd9fb4);
+  box-shadow: 0 6px 12px rgba(84, 45, 64, 0.2);
+  transform-origin: left bottom;
+  transition: transform 1s 0.25s var(--ease);
+}
+.gbox-lid .gbox-ribbon-v {
+  border-radius: 0;
+}
+.gbox.is-open .gbox-lid {
+  transform: translate(52px, -50px) rotate(-26deg);
+}
+.gbox-bow {
+  position: absolute;
+  left: 50%;
+  top: -22px;
+  width: 0;
+  height: 0;
+  transition: transform 0.9s var(--ease);
+}
+.gbox.is-loosen .gbox-bow {
+  transform: rotate(-8deg) scale(1.08);
+}
+.gbox.is-open .gbox-bow {
+  transform: translateY(-8px) rotate(14deg);
+}
+.bow-l,
+.bow-r,
+.bow-k {
+  position: absolute;
+  display: block;
+  background: linear-gradient(160deg, #f3e1b8, #d9bb85);
+  box-shadow: 0 2px 4px rgba(84, 45, 64, 0.22);
+}
+.bow-l,
+.bow-r {
+  top: 0;
+  width: 42px;
+  height: 28px;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+}
+.bow-l {
+  right: 4px;
+  transform: rotate(-24deg);
+  transform-origin: right center;
+}
+.bow-r {
+  left: 4px;
+  transform: rotate(24deg);
+  transform-origin: left center;
+}
+.bow-k {
+  left: -9px;
+  top: 6px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+}
+.gbox-rise {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.gr {
+  position: absolute;
+  bottom: 96px;
+  opacity: 0;
+}
+.gbox.is-open .gr {
+  animation: riseSpark 2.8s ease-out infinite;
+}
+@keyframes riseSpark {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.5);
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-150px) scale(1.1);
+  }
+}
+.gift-content {
+  width: min(640px, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: stretch;
+}
+.gift-card {
+  padding: 20px 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+.gift-card .hand {
+  font-size: 1.4rem;
+}
+.gift-video {
+  width: 100%;
+  max-height: 60vh;
+  border-radius: 14px;
+  background: #2a1630;
+}
+.collage {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.collage li {
+  padding: 6px;
+  background: #fff;
+  border-radius: 3px;
+  box-shadow: var(--shadow-sm);
+  transform: rotate(var(--r));
+}
+.collage img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.gift-placeholder {
+  padding: 18px;
+  border: 2px dashed var(--rose);
+  border-radius: 18px;
+  font-size: 0.92rem;
+  color: var(--brown);
+}
+.reasons {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: left;
+  width: 100%;
+}
+.reasons li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-family: var(--serif-soft);
+  font-size: 1.2rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+.reasons li svg {
+  flex: none;
+  margin-top: 6px;
+}
+.gift-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+.secret-text {
+  font-size: clamp(1.6rem, 5vw, 2rem);
+  line-height: 1.25;
+  text-wrap: balance;
+}
+
+/* ---------- 13. final ---------- */
+.mascot-wave {
+  width: clamp(130px, 30vw, 172px);
+  height: auto;
+  overflow: visible;
+}
+.final-text {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 36rem;
+}
+.final-p {
+  font-family: var(--serif-soft);
+  font-size: clamp(1.18rem, 3vw, 1.38rem);
+  font-weight: 500;
+  line-height: 1.6;
+  color: #4b2a3a;
+  text-wrap: pretty;
+}
+.final-strong {
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--wine);
+}
+.final-note {
+  max-width: 32rem;
+  padding-top: 6px;
+}
+.final-note .hand {
+  font-size: clamp(1.45rem, 4vw, 1.8rem);
+}
+.final-note-b {
+  margin-top: 4px;
+  color: #6d3a53;
+}
+.final-sign {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  max-width: 32rem;
+}
+.final-sign .hand {
+  font-size: 1.35rem;
+  line-height: 1.3;
+}
+.ig-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 14px;
+  border-radius: 999px;
+  color: var(--wine);
+  font-size: 0.92rem;
+  font-weight: 500;
+  text-decoration: none;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.7);
+}
+.ig-link:hover {
+  background: #fff;
+}
+.final-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+
+/* ---------- breakpoints for chapters 7 to 13 ---------- */
+@media (min-width: 620px) {
+  .ow-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .ow-item:last-child:nth-child(odd) {
+    grid-column: auto;
+  }
+}
+@media (min-width: 1000px) {
+  .games-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .ow-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}

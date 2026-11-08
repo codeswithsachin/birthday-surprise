@@ -1,0 +1,16 @@
+export const P = {
+  ivory: '#FFF9F3',
+  blush: '#F6DCE5',
+  rose: '#D995AA',
+  wine: '#542D40',
+  gold: '#D9BB85',
+  brown: '#785C56',
+  peach: '#F8E1D3',
+  cheek: '#F4A9BC',
+  white: '#FFFFFF',
+  leaf: '#A9C9A4',
+  leafDark: '#7FA77A',
+  sky: '#CFE3F2',
+  sun: '#F6C94C',
+  outline: 'rgba(84,45,64,0.22)',
+};
