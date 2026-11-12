@@ -46,20 +46,24 @@ export function fmtDate(iso: string | null): string {
 
 export function Modal({ title, children, onClose }: { title: string; children: ReactNode; onClose: () => void }) {
   const ref = useRef<HTMLDivElement>(null);
+  const closeRef = useRef(onClose);
+  closeRef.current = onClose; // always the latest, without re-running the effect below
   useEffect(() => {
+    // Runs ONCE when the popup opens. (It used to run on every key press and steal the cursor.)
     const prev = document.activeElement as HTMLElement | null;
-    ref.current?.focus();
+    const first = ref.current?.querySelector<HTMLElement>('input, textarea, select, button');
+    (first ?? ref.current)?.focus();
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') closeRef.current();
     };
     window.addEventListener('keydown', onKey);
     return () => {
       window.removeEventListener('keydown', onKey);
       prev?.focus();
     };
-  }, [onClose]);
+  }, []);
   return (
-    <div className="adm-overlay" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
+    <div className="adm-overlay" onMouseDown={(e) => e.target === e.currentTarget && closeRef.current()}>
       <div className="adm-modal" role="dialog" aria-modal="true" aria-label={title} tabIndex={-1} ref={ref}>
         <h2>{title}</h2>
         {children}

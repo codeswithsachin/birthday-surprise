@@ -87,6 +87,17 @@ export async function savePage(id: string, patch: PagePatch): Promise<PageRow> {
   return rowOrThrow(data);
 }
 
+/** Gives the page a brand new random link. The old link stops working. */
+export async function changeSlug(id: string, name: string): Promise<string> {
+  for (let attempt = 0; attempt < 6; attempt++) {
+    const slug = makeSlug(name || 'surprise');
+    const { error } = await sb().from('pages').update({ slug }).eq('id', id);
+    if (!error) return slug;
+    if (error.code !== '23505') throw new Error(error.message);
+  }
+  throw new Error('Could not find a free link. Please try again.');
+}
+
 export async function setStatus(id: string, status: PageStatus): Promise<void> {
   const { error } = await sb().from('pages').update({ status }).eq('id', id);
   if (error) throw new Error(error.message);

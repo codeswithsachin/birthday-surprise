@@ -2,11 +2,11 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { content as defaults } from '../content';
 import { sanitizeOverrides } from '../lib/merge';
 import type { JsonObject, JsonValue, MusicSetting, PageRow, PageStatus } from '../lib/types';
-import { exportJson, getPageById, removeMedia, savePage, setPin, type PagePatch } from './api';
+import { changeSlug, exportJson, getPageById, removeMedia, savePage, setPin, type PagePatch } from './api';
 import { ColorField, EditorContext, ListField, OpenWhenEditor, SelectField, TextField, UrlField } from './fields';
 import MusicEditor from './MusicEditor';
-import { fromLocalInput, setAt, toLocalInput } from './paths';
-import PhotosEditor from './PhotosEditor';
+import { fromLocalInput, getAt, setAt, toLocalInput } from './paths';
+import PhotosEditor, { readPhotos } from './PhotosEditor';
 import SharePanel from './SharePanel';
 import { Confirm, downloadFile, pageUrl, type Notify } from './ui';
 
@@ -57,6 +57,7 @@ export default function Editor({ id, notify, onBack }: { id: string; notify: Not
   const [showPreview, setShowPreview] = useState(false);
   const [wide, setWide] = useState(false);
   const [confirmLeave, setConfirmLeave] = useState(false);
+  const [confirmSlug, setConfirmSlug] = useState(false);
   const pending = useRef<Set<string>>(new Set());
   const iframe = useRef<HTMLIFrameElement>(null);
 
@@ -220,6 +221,18 @@ export default function Editor({ id, notify, onBack }: { id: string; notify: Not
           <button type="button" className="adm-btn" onClick={() => downloadFile(`${row.slug}.json`, exportJson(patchOf(draft)), 'application/json')}>Export JSON</button>
         </div>
         {dirty && <p className="adm-warn">You have unsaved changes.</p>}
+        <ul className="adm-checks" aria-label="Checklist">
+          {([
+            ['Name', draft.name.trim() !== ''],
+            ['Photos', readPhotos(draft.over).length > 0],
+            ['Personal paragraph', typeof getAt(draft.over, 'letter.personalParagraph') === 'string' && String(getAt(draft.over, 'letter.personalParagraph')).trim() !== ''],
+            ['Own music', draft.music.type !== 'builtin'],
+            ['Saved', !dirty],
+            ['Published', draft.status === 'published'],
+          ] as [string, boolean][]).map(([label, ok]) => (
+            <li key={label} className={ok ? 'is-ok' : ''}>{ok ? '✓' : '○'} {label}</li>
+          ))}
+        </ul>
 
         <div className={`adm-editor ${showPreview ? 'has-preview' : ''}`}>
           <div className="adm-forms">
@@ -329,6 +342,7 @@ export default function Editor({ id, notify, onBack }: { id: string; notify: Not
 
             <Section title="10. Share">
               <SharePanel slug={row.slug} status={draft.status} notify={notify} />
+              <button type="button" className="adm-btn adm-btn--danger" onClick={() => setConfirmSlug(true)}>Make a new link (old link stops working)</button>
             </Section>
           </div>
 
@@ -347,6 +361,25 @@ export default function Editor({ id, notify, onBack }: { id: string; notify: Not
           )}
         </div>
       </div>
+      {confirmSlug && (
+        <Confirm
+          title="Make a new link?"
+          text="The current link will stop working at once. Use this only if the link leaked or you sent it to the wrong person. Then send the new link."
+          action="Make new link"
+          danger
+          onNo={() => setConfirmSlug(false)}
+          onYes={() => {
+            setConfirmSlug(false);
+            void changeSlug(id, draft.name).then(
+              (slug) => {
+                setRow((r) => (r ? { ...r, slug } : r));
+                notify('New link ready. The old one is gone.');
+              },
+              (e: unknown) => notify(e instanceof Error ? e.message : 'Could not change the link.', 'error'),
+            );
+          }}
+        />
+      )}
       {confirmLeave && (
         <Confirm title="Leave without saving?" text="Your unsaved changes will be lost." action="Leave" danger onYes={onBack} onNo={() => setConfirmLeave(false)} />
       )}
