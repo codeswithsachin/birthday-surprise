@@ -29,12 +29,12 @@ export interface Photo {
 
 export const content = {
   /* ---------------------------------------------------------------- 1. BASICS */
-  recipientName: '', // CHANGE ME, for example 'Aanya'
+  recipientName: '[Name]', // CHANGE ME, for example 'Aanya'
   nickname: '', // optional cute nickname, used in a few small places
-  birthdayDate: '11/08', // optional, for example '18 October'. Leave '' to hide it.
+  birthdayDate: '', // optional, for example '18 October'. Leave '' to hide it.
   creatorName: 'Sachin',
-  instagram: '@nyxsachin',
-  instagramUrl: 'https://instagram.com/nyxsachin',
+  instagram: '@sachinkrcodes',
+  instagramUrl: 'https://instagram.com/sachinkrcodes',
 
   /* partner or crush adds your optional romantic paragraph to the letter.
      best-friend or someone-special keeps everything warm but platonic. */

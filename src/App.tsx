@@ -1,48 +1,46 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { useCallback, useEffect, useRef, useState, type ComponentType } from 'react';
+import { Suspense, lazy, useCallback, useEffect, useRef, useState, type ComponentType } from 'react';
 import { useMusic } from './audio';
 import type { ChapterProps } from './components/Chapter';
 import { BottomBar, ChapterMenu, TopBar } from './components/Shell';
 import { content } from './content';
 import { usePrefs } from './prefs';
-import BirthdayCake from './chapters/BirthdayCake';
-import BirthdayReveal from './chapters/BirthdayReveal';
-import CuteComparisons from './chapters/CuteComparisons';
-import FinalMessage from './chapters/FinalMessage';
-import GiftReveal from './chapters/GiftReveal';
-import HeartfeltLetter from './chapters/HeartfeltLetter';
-import InteractiveLetters from './chapters/InteractiveLetters';
-import MiniGames from './chapters/MiniGames';
-import OpeningScene from './chapters/OpeningScene';
-import QualitiesScrapbook from './chapters/QualitiesScrapbook';
-import ScrapbookGallery from './chapters/ScrapbookGallery';
-import StarryWishes from './chapters/StarryWishes';
-import WishesChapter from './chapters/WishesChapter';
 
-const CHAPTERS: ComponentType<ChapterProps>[] = [
-  OpeningScene,
-  BirthdayReveal,
-  CuteComparisons,
-  QualitiesScrapbook,
-  ScrapbookGallery,
-  WishesChapter,
-  InteractiveLetters,
-  MiniGames,
-  BirthdayCake,
-  HeartfeltLetter,
-  StarryWishes,
-  GiftReveal,
-  FinalMessage,
+type ChapterModule = { default: ComponentType<ChapterProps> };
+
+/* Chapters are loaded on demand (React.lazy). The next one is fetched in the background. */
+const LOADERS: (() => Promise<ChapterModule>)[] = [
+  () => import('./chapters/OpeningScene'),
+  () => import('./chapters/BirthdayReveal'),
+  () => import('./chapters/CuteComparisons'),
+  () => import('./chapters/QualitiesScrapbook'),
+  () => import('./chapters/ScrapbookGallery'),
+  () => import('./chapters/WishesChapter'),
+  () => import('./chapters/InteractiveLetters'),
+  () => import('./chapters/MiniGames'),
+  () => import('./chapters/BirthdayCake'),
+  () => import('./chapters/HeartfeltLetter'),
+  () => import('./chapters/StarryWishes'),
+  () => import('./chapters/GiftReveal'),
+  () => import('./chapters/FinalMessage'),
 ];
+const CHAPTERS = LOADERS.map((load) => lazy(load));
 const TOTAL = CHAPTERS.length;
 const DARK_CHAPTER = 10;
 
-export default function App() {
-  const [index, setIndex] = useState(0);
+interface AppProps {
+  /** used by the admin live preview, so a refresh keeps the same chapter */
+  startAt?: number;
+  onIndexChange?: (index: number) => void;
+}
+
+export default function App({ startAt = 0, onIndexChange }: AppProps = {}) {
+  const first = Math.max(0, Math.min(TOTAL - 1, startAt));
+  const [index, setIndex] = useState(first);
   const [dir, setDir] = useState(1);
-  const [visited, setVisited] = useState<Set<number>>(() => new Set([0]));
+  const [visited, setVisited] = useState<Set<number>>(() => new Set([first]));
   const [menu, setMenu] = useState(false);
-  const indexRef = useRef(0);
+  const indexRef = useRef(first);
   const music = useMusic();
   const { reduced } = usePrefs();
 
@@ -54,6 +52,12 @@ export default function App() {
     setVisited((v) => (v.has(n) ? v : new Set(v).add(n)));
     setMenu(false);
   }, []);
+
+  useEffect(() => {
+    onIndexChange?.(index);
+    const nextLoader = LOADERS[index + 1];
+    if (nextLoader) void nextLoader().catch(() => undefined);
+  }, [index, onIndexChange]);
 
   const next = useCallback(() => go(indexRef.current + 1), [go]);
   const prev = useCallback(() => go(indexRef.current - 1), [go]);
@@ -101,7 +105,9 @@ export default function App() {
             exit="exit"
             transition={{ duration: reduced ? 0.01 : 0.55, ease: [0.22, 1, 0.36, 1] }}
           >
-            <Current onNext={next} onReplay={replay} onMenu={openMenu} />
+            <Suspense fallback={<div className="chapter-loading" role="status" aria-label="Loading" />}>
+              <Current onNext={next} onReplay={replay} onMenu={openMenu} />
+            </Suspense>
           </motion.div>
         </AnimatePresence>
       </main>
