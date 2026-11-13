@@ -4,6 +4,8 @@ import { sanitizeOverrides } from '../lib/merge';
 import type { JsonObject, JsonValue, MusicSetting, PageRow, PageStatus } from '../lib/types';
 import { changeSlug, exportJson, getPageById, removeMedia, savePage, setPin, type PagePatch } from './api';
 import { ColorField, EditorContext, ListField, OpenWhenEditor, SelectField, TextField, UrlField } from './fields';
+import { CheckField, PoemsEditor, QuickAdd, ThemePicker } from './LookAndFeel';
+import { SKY, WISHES } from './library';
 import MusicEditor from './MusicEditor';
 import { fromLocalInput, getAt, setAt, toLocalInput } from './paths';
 import PhotosEditor, { readPhotos } from './PhotosEditor';
@@ -58,6 +60,7 @@ export default function Editor({ id, notify, onBack }: { id: string; notify: Not
   const [wide, setWide] = useState(false);
   const [confirmLeave, setConfirmLeave] = useState(false);
   const [confirmSlug, setConfirmSlug] = useState(false);
+  const [libTick, setLibTick] = useState(0);
   const pending = useRef<Set<string>>(new Set());
   const iframe = useRef<HTMLIFrameElement>(null);
 
@@ -257,17 +260,6 @@ export default function Editor({ id, notify, onBack }: { id: string; notify: Not
                   { value: 'crush', label: 'Crush' },
                 ]}
               />
-              <SelectField
-                path="animal"
-                label="Mascot"
-                options={[
-                  { value: 'teddy', label: 'Teddy bear' },
-                  { value: 'bear', label: 'Little bear' },
-                  { value: 'bunny', label: 'Bunny' },
-                  { value: 'cat', label: 'Kitten' },
-                ]}
-              />
-              <ColorField path="accentColor" label="Accent colour" />
               <label className="adm-field">
                 <span className="adm-label">Language of the page</span>
                 <select className="adm-input" value={draft.language} onChange={(e) => set('language', e.target.value)}>
@@ -277,7 +269,33 @@ export default function Editor({ id, notify, onBack }: { id: string; notify: Not
               </label>
             </Section>
 
-            <Section title="2. Letter">
+            <Section title="2. Look and feel">
+              <ThemePicker />
+              <SelectField
+                path="theme.energy"
+                label="How much floats on the screen"
+                options={[
+                  { value: 'calm', label: 'Calm (a few)' },
+                  { value: 'normal', label: 'Normal' },
+                  { value: 'lively', label: 'Lively (many)' },
+                ]}
+              />
+              <CheckField path="theme.tapBurst" label="Little pop of emojis when she/he taps the screen" />
+              <SelectField
+                path="animal"
+                label="Mascot (the little character)"
+                options={[
+                  { value: 'teddy', label: 'Teddy bear' },
+                  { value: 'bear', label: 'Little bear' },
+                  { value: 'bunny', label: 'Bunny' },
+                  { value: 'cat', label: 'Kitten' },
+                  { value: 'dog', label: 'Puppy' },
+                ]}
+              />
+              <ColorField path="accentColor" label="Own accent colour (optional, beats the theme colour)" />
+            </Section>
+
+            <Section title="3. Letter">
               <TextField path="letter.personalParagraph" label="Your personal paragraph" multiline rows={5} help="A real memory makes the letter yours." />
               {partner ? (
                 <TextField path="letter.romanticParagraph" label="Romantic paragraph" multiline rows={5} help="Shown only for partner or crush. Keep it free of pressure." />
@@ -286,23 +304,31 @@ export default function Editor({ id, notify, onBack }: { id: string; notify: Not
               )}
             </Section>
 
-            <Section title="3. Wishes">
-              <ListField path="wishes.items" label="Little things I wish for you" rows={10} />
-              <ListField path="sky.wishes" label="Wishes in the starry sky" rows={8} />
+            <Section title="4. Wishes">
+              <ListField key={`w${libTick}`} path="wishes.items" label="Little things I wish for you" rows={10} />
+              <QuickAdd path="wishes.items" label="Add ready-made wishes" lines={WISHES} onAdded={() => setLibTick((n) => n + 1)} />
+              <ListField key={`s${libTick}`} path="sky.wishes" label="Wishes in the starry sky" rows={8} />
+              <QuickAdd path="sky.wishes" label="Add ready-made sky wishes" lines={SKY} onAdded={() => setLibTick((n) => n + 1)} />
             </Section>
 
-            <Section title="4. Open-when letters">
+            <Section title="5. Poems and lines">
+              <TextField path="poems.heading" label="Heading" maxLength={120} />
+              <TextField path="poems.hint" label="Small hint" maxLength={120} />
+              <PoemsEditor />
+            </Section>
+
+            <Section title="6. Open-when letters">
               <OpenWhenEditor />
             </Section>
 
-            <Section title="5. Final note">
+            <Section title="7. Final note">
               <ListField path="final.paragraphs" label="Final paragraphs" paragraphs rows={10} />
               <TextField path="final.finalNoteTop" label="Small line (top)" multiline rows={2} />
               <TextField path="final.finalNoteBottom" label="Small line (bottom)" multiline rows={2} />
               <TextField path="final.signature" label="Signature line" multiline rows={2} />
             </Section>
 
-            <Section title="6. Gift">
+            <Section title="8. Gift">
               <UrlField path="gift.songLink" label="Song link" help="YouTube, Spotify or any https link." />
               <TextField path="gift.songLabel" label="Song button text" maxLength={80} />
               <UrlField path="gift.videoSrc" label="Video link" help="A direct link to a video file (like .mp4)." />
@@ -310,15 +336,15 @@ export default function Editor({ id, notify, onBack }: { id: string; notify: Not
               <TextField path="gift.secret" label="Secret message" multiline rows={3} />
             </Section>
 
-            <Section title="7. Photos">
+            <Section title="9. Photos">
               <PhotosEditor pageId={id} notify={notify} onRemoved={(p) => pending.current.add(p)} />
             </Section>
 
-            <Section title="8. Music">
+            <Section title="10. Music">
               <MusicEditor pageId={id} music={draft.music} onChange={(m) => set('music', m)} onRemoved={(p) => pending.current.add(p)} notify={notify} />
             </Section>
 
-            <Section title="9. Settings">
+            <Section title="11. Settings">
               <label className="adm-field">
                 <span className="adm-label">Unlock date and time (optional)</span>
                 <input className="adm-input" type="datetime-local" value={draft.unlock} onChange={(e) => set('unlock', e.target.value)} />
@@ -340,7 +366,7 @@ export default function Editor({ id, notify, onBack }: { id: string; notify: Not
               </div>
             </Section>
 
-            <Section title="10. Share">
+            <Section title="12. Share">
               <SharePanel slug={row.slug} status={draft.status} notify={notify} />
               <button type="button" className="adm-btn adm-btn--danger" onClick={() => setConfirmSlug(true)}>Make a new link (old link stops working)</button>
             </Section>

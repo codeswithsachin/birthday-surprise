@@ -1,11 +1,14 @@
 import type { Session } from '@supabase/supabase-js';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { isConfigured, supabase } from '../lib/supabase';
+import { authLinkError, isConfigured, startedInRecovery, supabase } from '../lib/supabase';
 import { isAdmin } from './api';
 import Account from './Account';
 import Dashboard from './Dashboard';
 import Editor from './Editor';
 import Login from './Login';
+import { getLevel } from './mfa';
+import NewPassword from './NewPassword';
+import VerifyCode from './VerifyCode';
 import type { Notify } from './ui';
 import './admin.css';
 
@@ -42,6 +45,10 @@ export default function AdminApp() {
   const [theme, setTheme] = useState<Theme>(initialTheme);
   const [account, setAccount] = useState(false);
   const [newTick, setNewTick] = useState(0);
+  const [recovery, setRecovery] = useState(startedInRecovery);
+  const [level, setLevel] = useState<'need-code' | 'ok' | undefined>(undefined);
+  const [authTick, setAuthTick] = useState(0);
+  const [notice, setNotice] = useState(authLinkError ? 'That link is expired or already used. Ask for a new one with “Forgot password?”.' : '');
   const timer = useRef<number>(0);
 
   useEffect(() => {
@@ -66,21 +73,44 @@ export default function AdminApp() {
   useEffect(() => {
     if (!supabase) return undefined;
     void supabase.auth.getSession().then(({ data }) => setSession(data.session));
-    const { data } = supabase.auth.onAuthStateChange((_e, s) => setSession(s));
+    const { data } = supabase.auth.onAuthStateChange((e, s) => {
+      if (e === 'PASSWORD_RECOVERY') setRecovery(true);
+      if (s) setNotice('');
+      setSession(s);
+    });
     return () => data.subscription.unsubscribe();
   }, []);
 
   useEffect(() => {
+    if (recovery && session === null) {
+      setRecovery(false);
+      setNotice('That reset link is expired or already used. Ask for a new one with “Forgot password?”.');
+    }
+  }, [recovery, session]);
+
+  useEffect(() => {
     if (!session) {
+      setLevel(undefined);
+      return undefined;
+    }
+    let cancelled = false;
+    void getLevel().then((l) => !cancelled && setLevel(l));
+    return () => {
+      cancelled = true;
+    };
+  }, [session, authTick]);
+
+  useEffect(() => {
+    if (!session || level !== 'ok') {
       setAdmin(undefined);
-      return;
+      return undefined;
     }
     let cancelled = false;
     void isAdmin().then((ok) => !cancelled && setAdmin(ok));
     return () => {
       cancelled = true;
     };
-  }, [session]);
+  }, [session, level, authTick]);
 
   useEffect(() => {
     const h = () => setEditId(readHash());
@@ -119,7 +149,30 @@ export default function AdminApp() {
   } else if (session === undefined) {
     body = <div className="adm-page"><div className="adm-loading"><div className="adm-sk" /></div></div>;
   } else if (session === null) {
-    body = <Login />;
+    body = <Login notice={notice} />;
+  } else if (recovery) {
+    const leave = () => {
+      setRecovery(false);
+      void supabase?.auth.signOut();
+    };
+    body =
+      level === undefined ? (
+        <div className="adm-page"><p>Checking…</p></div>
+      ) : level === 'need-code' ? (
+        <VerifyCode title="Confirm it is you" onDone={() => setAuthTick((n) => n + 1)} onCancel={leave} />
+      ) : (
+        <NewPassword
+          onDone={() => {
+            setRecovery(false);
+            setNotice('Password changed. Log in with your new password.');
+            void supabase?.auth.signOut();
+          }}
+        />
+      );
+  } else if (level === undefined) {
+    body = <div className="adm-page"><p>Checking access…</p></div>;
+  } else if (level === 'need-code') {
+    body = <VerifyCode onDone={() => setAuthTick((n) => n + 1)} onCancel={() => void supabase?.auth.signOut()} />;
   } else if (admin === undefined) {
     body = <div className="adm-page"><p>Checking access…</p></div>;
   } else if (!admin) {

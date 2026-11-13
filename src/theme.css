@@ -1,0 +1,95 @@
+/* ===== Theme packs: colours + floating layer. The classic pack changes nothing. ===== */
+.scene-poems { background: radial-gradient(60% 45% at 50% 28%, rgba(255, 255, 255, 0.75), transparent 70%), linear-gradient(170deg, #fff7f2, #f9e3ea 58%, #eadcf3); }
+
+.app[data-theme='cat']      { --rose:#e08fa8; --blush:#fde6ea; --gold:#d9b27a; --wine:#4b2a45; --t1:#fff7f0; --t2:#fde6ea; --t3:#e9dcf7; --n1:#1d1233; --n2:#3b2155; --n3:#5a2f62; }
+.app[data-theme='dog']      { --rose:#d9893f; --blush:#fdebc8; --gold:#c9a24a; --wine:#5a3a1e; --t1:#fffaf0; --t2:#fdebc8; --t3:#f6d3a8; --n1:#24160c; --n2:#4a2d17; --n3:#6e4524; }
+.app[data-theme='fish']     { --rose:#2f9fc4; --blush:#c9ecf7; --gold:#f2c46d; --wine:#12394f; --t1:#f0fbff; --t2:#c9ecf7; --t3:#9fd3ea; --n1:#06203a; --n2:#0b3b5e; --n3:#0f5a7a; }
+.app[data-theme='mountain'] { --rose:#4f8a8b; --blush:#dbe8ee; --gold:#d6b36a; --wine:#1f3d3f; --t1:#f4f8fb; --t2:#dbe8ee; --t3:#b9d0c4; --n1:#0e1d24; --n2:#1d3a40; --n3:#2f5a5a; }
+.app[data-theme='ice']      { --rose:#5aa9e6; --blush:#dff1fb; --gold:#9ccbe8; --wine:#173a5a; --t1:#f5fbff; --t2:#dff1fb; --t3:#c6e0f5; --n1:#0a1a33; --n2:#18365c; --n3:#2a5a8a; }
+.app[data-theme='jungle']   { --rose:#3f9b5a; --blush:#d6efc7; --gold:#e3b94a; --wine:#1d4128; --t1:#f3fbef; --t2:#d6efc7; --t3:#a9d6a2; --n1:#0a1f12; --n2:#17402a; --n3:#25623d; }
+.app[data-theme='maple']    { --rose:#d4572a; --blush:#fcdcbc; --gold:#e2a43b; --wine:#5a2412; --t1:#fff6ec; --t2:#fcdcbc; --t3:#f1a971; --n1:#2a0f08; --n2:#561f10; --n3:#82381a; }
+.app[data-theme='anime']    { --rose:#ff6fae; --blush:#fbd6ee; --gold:#ffd166; --wine:#3b1f5c; --t1:#fff5fb; --t2:#fbd6ee; --t3:#d7c6fb; --n1:#150a33; --n2:#33185e; --n3:#5a2a86; }
+.app[data-theme='galaxy']   { --rose:#7c5cd6; --blush:#d9ccf5; --gold:#f0c75e; --wine:#2a1a55; --t1:#f3eefe; --t2:#d9ccf5; --t3:#b7a6ea; --n1:#0d0826; --n2:#241453; --n3:#3f2a7d; }
+
+/* one themed background for every light scene (the sky stays a night sky, the letter stays paper) */
+.app[data-theme]:not([data-theme='classic']) .chapter:not(.scene-sky):not(.scene-letter) {
+  background:
+    radial-gradient(60% 45% at 50% 28%, rgba(255, 255, 255, 0.75), transparent 70%),
+    linear-gradient(170deg, var(--t1), var(--t2) 58%, var(--t3));
+}
+.app[data-theme]:not([data-theme='classic']) .chapter.scene-qualities,
+.app[data-theme]:not([data-theme='classic']) .chapter.scene-scrapbook {
+  background:
+    radial-gradient(rgba(60, 60, 80, 0.1) 1px, transparent 1px) 0 0 / 22px 22px,
+    linear-gradient(170deg, var(--t1), var(--t2) 70%, var(--t3));
+}
+.app[data-theme]:not([data-theme='classic']) .chapter.scene-letter {
+  background: radial-gradient(90% 70% at 50% 40%, #fffaf2 0%, color-mix(in srgb, var(--t2) 35%, #f6ebdc) 70%, color-mix(in srgb, var(--t3) 40%, #ecd9c4) 100%);
+}
+.app[data-theme]:not([data-theme='classic']) .chapter.scene-sky {
+  background:
+    radial-gradient(60% 40% at 78% 14%, rgba(255, 255, 255, 0.16), transparent 70%),
+    linear-gradient(180deg, var(--n1) 0%, var(--n2) 55%, var(--n3) 100%);
+}
+
+/* floating layer */
+.amb { position: fixed; inset: 0; z-index: 4; pointer-events: none; overflow: hidden; }
+.amb-p { position: absolute; opacity: 0; line-height: 1; user-select: none; will-change: transform, opacity; animation-timing-function: linear; animation-iteration-count: infinite; }
+.amb-fall .amb-p { top: -6%; animation-name: amb-fall; }
+.amb-rise .amb-p { top: 104%; animation-name: amb-rise; }
+.amb-float .amb-p { animation-name: amb-float; animation-timing-function: ease-in-out; }
+.amb-swim .amb-p { left: 104% !important; animation-name: amb-swim; }
+.amb-swim .amb-p:nth-child(3n) { animation-name: amb-rise; top: 104%; left: auto; }
+@keyframes amb-fall {
+  0% { transform: translate3d(0, -8vh, 0) rotate(0deg); opacity: 0; }
+  10% { opacity: 0.75; }
+  50% { transform: translate3d(var(--drift), 55vh, 0) rotate(160deg); }
+  90% { opacity: 0.7; }
+  100% { transform: translate3d(calc(var(--drift) * -0.6), 112vh, 0) rotate(320deg); opacity: 0; }
+}
+@keyframes amb-rise {
+  0% { transform: translate3d(0, 0, 0) scale(0.8); opacity: 0; }
+  12% { opacity: 0.7; }
+  60% { transform: translate3d(var(--drift), -62vh, 0) scale(1); }
+  100% { transform: translate3d(calc(var(--drift) * -0.5), -118vh, 0) scale(1.1); opacity: 0; }
+}
+@keyframes amb-float {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(-6deg); opacity: 0; }
+  20% { opacity: 0.7; }
+  50% { transform: translate3d(var(--drift), -26px, 0) rotate(6deg); opacity: 0.75; }
+  80% { opacity: 0.6; }
+}
+@keyframes amb-swim {
+  0% { transform: translate3d(0, 0, 0); opacity: 0; }
+  6% { opacity: 0.8; }
+  50% { transform: translate3d(-60vw, 18px, 0); }
+  94% { opacity: 0.8; }
+  100% { transform: translate3d(-125vw, -10px, 0); opacity: 0; }
+}
+.amb-burst { position: fixed; width: 0; height: 0; }
+.amb-b { position: absolute; left: 0; top: 0; font-size: 22px; line-height: 1; opacity: 0; animation: amb-burst 1s ease-out forwards; }
+@keyframes amb-burst {
+  0% { transform: translate(-50%, -50%) scale(0.4); opacity: 1; }
+  100% { transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1.25); opacity: 0; }
+}
+
+/* poems and lines chapter */
+.poem-wrap { width: min(560px, 100%); display: grid; gap: 14px; justify-items: center; }
+.poem-card { width: 100%; padding: 26px 24px 28px; text-align: center; display: grid; gap: 10px; justify-items: center; }
+.poem-kind { font: 600 0.72rem var(--sans); letter-spacing: 0.14em; text-transform: uppercase; color: var(--rose); border: 1px solid currentColor; border-radius: 999px; padding: 4px 12px; }
+.poem-title { font-family: var(--serif); font-weight: 500; font-size: 1.5rem; margin: 0; color: var(--wine); }
+.poem-lines { display: grid; gap: 4px; }
+.poem-line { margin: 0; font-family: var(--serif-soft); font-style: italic; font-size: clamp(1.15rem, 3.8vw, 1.4rem); line-height: 1.5; color: var(--wine); overflow-wrap: anywhere; }
+.poem-gap { display: block; height: 10px; }
+.poem-by { margin: 6px 0 0; font-family: var(--hand); font-size: 1.3rem; color: var(--brown); }
+.poem-nav { display: flex; align-items: center; gap: 16px; }
+.poem-count { font: 600 0.9rem var(--sans); color: var(--wine); min-width: 56px; }
+.poem-nav .btn:disabled { opacity: 0.4; cursor: default; }
+
+@media (prefers-reduced-motion: reduce) { .amb { display: none; } }
+
+.app[data-theme='garden']    { --rose:#e8739a; --blush:#fde3ec; --gold:#e6b94d; --wine:#4a2340; --t1:#fff7fa; --t2:#fde3ec; --t3:#d9efcf; --n1:#1a1030; --n2:#3a1d4a; --n3:#5a2f56; }
+.app[data-theme='rose']      { --rose:#c2185b; --blush:#fbd5df; --gold:#d4a24c; --wine:#4a1230; --t1:#fff5f7; --t2:#fbd5df; --t3:#f3a6bd; --n1:#2a0818; --n2:#531030; --n3:#7a1a48; }
+.app[data-theme='sunflower'] { --rose:#e0a100; --blush:#fff1b8; --gold:#c98a00; --wine:#4a3300; --t1:#fffdf0; --t2:#fff1b8; --t3:#ffd84d; --n1:#241a05; --n2:#4a3508; --n3:#74530c; }
+.app[data-theme='tulip']     { --rose:#e0568a; --blush:#fde2ee; --gold:#e3b95a; --wine:#4a1f3c; --t1:#fff7fb; --t2:#fde2ee; --t3:#e7d6f7; --n1:#1d1038; --n2:#3d2062; --n3:#5e3488; }
+.app[data-theme='lotus']     { --rose:#d9609a; --blush:#fde0ee; --gold:#d9b86a; --wine:#3f2040; --t1:#fff7fb; --t2:#fde0ee; --t3:#cde9e4; --n1:#0a2230; --n2:#123f4d; --n3:#1d5f66; }

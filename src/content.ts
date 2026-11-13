@@ -8,7 +8,10 @@
      {creator}  becomes your name
    ========================================================================== */
 
-export type Animal = 'teddy' | 'bunny' | 'cat' | 'bear';
+export type Animal = 'teddy' | 'bunny' | 'cat' | 'bear' | 'dog';
+export type ThemePack = 'classic' | 'cat' | 'dog' | 'fish' | 'mountain' | 'ice' | 'jungle' | 'maple' | 'anime' | 'galaxy' | 'garden' | 'rose' | 'sunflower' | 'tulip' | 'lotus';
+export type Energy = 'calm' | 'normal' | 'lively';
+export type PieceKind = 'poem' | 'quote' | 'wish';
 export type Relationship = 'partner' | 'crush' | 'best-friend' | 'someone-special';
 export type ArtKey =
   | 'teddy'
@@ -33,8 +36,8 @@ export const content = {
   nickname: '', // optional cute nickname, used in a few small places
   birthdayDate: '', // optional, for example '18 October'. Leave '' to hide it.
   creatorName: 'Sachin',
-  instagram: '@sachinkrcodes',
-  instagramUrl: 'https://instagram.com/sachinkrcodes',
+  instagram: '@nyxsachin',
+  instagramUrl: 'https://instagram.com/nyxsachin',
 
   /* partner or crush adds your optional romantic paragraph to the letter.
      best-friend or someone-special keeps everything warm but platonic. */
@@ -45,6 +48,15 @@ export const content = {
 
   /* Optional favorite color (hex). Leave '' to keep the default dusty rose. */
   accentColor: '',
+
+  /* Look and feel. pack changes the colours and the floating animation
+     (cats, dogs, fish, mountains, snow, jungle, maple leaves, anime, galaxy).
+     energy = how many things float. tapBurst = little pop when she/he taps the screen. */
+  theme: {
+    pack: 'classic' as ThemePack,
+    energy: 'normal' as Energy,
+    tapBurst: true,
+  },
 
   /* ------------------------------------------------------------------ MUSIC */
   music: {
@@ -62,6 +74,7 @@ export const content = {
     'Things that make you, you',
     'A little photo scrapbook',
     'Little things I wish for you',
+    'A few lines for you',
     'A few little notes',
     'A tiny game',
     'The birthday cake',
@@ -207,6 +220,31 @@ export const content = {
       'I hope you have quiet mornings, beautiful surprises, comforting hugs, and people who mean what they say.',
       'I hope you never forget that your existence matters beyond what you achieve or what you do for anyone else.',
       'And most of all, I hope this new chapter gives you more reasons to smile than you can count.',
+    ],
+  },
+
+  poems: {
+    heading: 'A few lines, just for you',
+    hint: 'Tap the arrows to read the next one.',
+    items: [
+      {
+        kind: 'poem' as PieceKind,
+        title: 'Today',
+        text: 'Today the clock moves a little slower,\nso the day can stay with you longer.\nMay every candle you blow out\ncarry a wish that grows stronger.\n\nHappy birthday, {name}.',
+        by: '',
+      },
+      {
+        kind: 'quote' as PieceKind,
+        title: '',
+        text: 'You do not need to become anyone new this year.\nJust more of who you already are.',
+        by: '',
+      },
+      {
+        kind: 'poem' as PieceKind,
+        title: 'A small wish',
+        text: 'May your mornings begin with a smile,\nmay your evenings end in peace,\nand may everything your heart quietly asks for\nfind its way to you this year.',
+        by: '',
+      },
     ],
   },
 

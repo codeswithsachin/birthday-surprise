@@ -7,6 +7,7 @@ import PageGate from './pages/PageGate';
 import './styles.css';
 import './anim.css';
 import './chapters.css';
+import './theme.css';
 
 /* The admin panel is a separate chunk, so visitors of a surprise never download it. */
 const AdminApp = lazy(() => import('./admin/AdminApp'));

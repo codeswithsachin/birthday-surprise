@@ -4,7 +4,7 @@ An interactive birthday surprise website with 13 animated chapters, now a small 
 you log in to a private admin panel, create one page per person, upload photos and music,
 and send each person their own secret link. Built with React, TypeScript, Vite and Framer Motion.
 Data lives in Supabase (free plan is enough). Vercel only hosts the static site.
-Created by Sachin, Instagram [@sachinkrcodes](https://instagram.com/sachinkrcodes).
+Created by Sachin, Instagram [@nyxsachin](https://instagram.com/nyxsachin).
 
 How it works in one minute:
 
@@ -85,6 +85,38 @@ Export / Import JSON as a backup, Delete (also removes the photos and music from
 Photos: up to 12, resized to 1400 px and saved as WebP (JPEG on browsers that cannot make WebP).
 Music: built-in music box, an MP3 up to 8 MB (you must tick "I have the right to use this song"),
 or a direct link to an audio file. Music never autoplays.
+
+## Themes, poems and wishes (admin)
+
+* **Look and feel**: pick a theme (classic rose, cat, dog, ocean and fish, mountains, ice and snow, jungle,
+  maple leaves, anime and sakura, galaxy, flower garden, roses, sunflowers, tulips, lotus). It changes the
+  colours of every chapter and adds slow floating decorations. You can also choose how many float, turn the
+  tap-to-pop emojis on or off, and pick a mascot (teddy, bear, bunny, kitten, puppy).
+* **Wishes**: write your own, or press "Add ready-made wishes".
+* **Poems and lines**: a new chapter. Add your own poems, lines and wishes, or pick from the ready-made English library.
+  Use `{name}` for the person's name.
+* People who turned on "reduce motion" in their phone settings see no floating decorations.
+
+## Two-step login and forgot password
+
+**Turn on the authenticator code (recommended)**
+1. Supabase, **SQL Editor**, **New query**. Paste the file `supabase/two-step.sql`, click **Run**. (Do this once.)
+2. Open `/admin`, log in, click **Account**, **Two-step verification**, **Turn on**.
+3. Install Google Authenticator (or Microsoft Authenticator) on your phone, scan the QR code, type the 6-digit code.
+4. Save the secret key shown under the QR (a screenshot in a safe place is fine). It is your backup.
+5. Test in a private/incognito window: password, then code. Only then close your normal window.
+
+From then on the database itself refuses admin actions unless the code step was passed.
+
+**If you lose your phone:** Supabase, SQL Editor, run
+`delete from auth.mfa_factors where user_id = (select id from auth.users where email = 'YOUR_ADMIN_EMAIL');`
+Then log in with the password only and turn two-step on again.
+
+**Forgot password setup (once):** Supabase, **Authentication**, **URL Configuration**.
+Set **Site URL** to your live address (for example `https://birthday-sachinkrcodes.vercel.app`) and add these under **Redirect URLs**:
+`https://birthday-sachinkrcodes.vercel.app/admin` and `http://localhost:5173/admin`.
+Supabase's built-in email sends only 2 emails per hour for the whole project, so use "Forgot password?" sparingly.
+If two-step is ON, the reset link also asks for the 6-digit code before you can set a new password.
 
 ## Security notes (honest version)
 

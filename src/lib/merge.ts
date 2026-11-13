@@ -7,7 +7,10 @@ import { MAX_PHOTOS, type JsonObject, type JsonValue } from './types';
 
 const BLOCKED_TOP = new Set(['recipientName', 'birthdayDate', 'creatorName', 'instagram', 'instagramUrl', 'music']);
 const RELATIONSHIPS = ['partner', 'crush', 'best-friend', 'someone-special'];
-const ANIMALS = ['teddy', 'bunny', 'cat', 'bear'];
+const ANIMALS = ['teddy', 'bunny', 'cat', 'bear', 'dog'];
+const PACKS = ['classic', 'cat', 'dog', 'fish', 'mountain', 'ice', 'jungle', 'maple', 'anime', 'galaxy', 'garden', 'rose', 'sunflower', 'tulip', 'lotus'];
+const KINDS = ['poem', 'quote', 'wish'];
+const NEW_TITLE_AT = 6; // chapter 'A few lines for you' was added after the wishes chapter
 const ART = ['teddy', 'sunflower', 'kitten', 'cocoa', 'moon', 'flowers', 'pocketStar', 'song', 'home'];
 const MAX_TEXT = 6000;
 const MAX_ITEMS = 60;
@@ -64,10 +67,16 @@ const RULES: Record<string, Rule> = {
   'scrapbook.photos': photosRule,
   'scrapbook.memories': memoriesRule,
   'comparisons.cards[].art': oneOf(ART, 'teddy'),
-  chapterTitles: (v) =>
-    Array.isArray(v) && v.length === 13 && v.every((x) => typeof x === 'string')
-      ? (v as string[]).map((x) => cleanText(x, 80))
-      : undefined,
+  'theme.pack': oneOf(PACKS),
+  'theme.energy': oneOf(['calm', 'normal', 'lively']),
+  'poems.items[].kind': oneOf(KINDS, 'poem'),
+  chapterTitles: (v) => {
+    if (!Array.isArray(v) || !v.every((x) => typeof x === 'string')) return undefined;
+    const t = (v as string[]).map((x) => cleanText(x, 80));
+    if (t.length === 14) return t;
+    if (t.length === 13) return [...t.slice(0, NEW_TITLE_AT), 'A few lines for you', ...t.slice(NEW_TITLE_AT)]; // older saved pages
+    return undefined;
+  },
 };
 
 function emptyLike(def: unknown): JsonValue {

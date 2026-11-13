@@ -1,5 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import { supabase } from '../lib/supabase';
+import PasswordInput from './PasswordInput';
+import TwoStep from './TwoStep';
 import { Modal, type Notify } from './ui';
 
 export default function Account({ email, notify, onClose }: { email: string; notify: Notify; onClose: () => void }) {
@@ -11,7 +13,7 @@ export default function Account({ email, notify, onClose }: { email: string; not
   const submit = async (e: FormEvent) => {
     e.preventDefault();
     if (!supabase) return;
-    if (pw.length < 8) return setError('Use at least 8 characters.');
+    if (pw.length < 10) return setError('Use at least 10 characters.');
     if (pw !== pw2) return setError('The two passwords are not the same.');
     setBusy(true);
     setError('');
@@ -26,14 +28,16 @@ export default function Account({ email, notify, onClose }: { email: string; not
     <Modal title="My account" onClose={onClose}>
       <p className="adm-help">Logged in as</p>
       <p className="adm-strong">{email}</p>
+      <TwoStep notify={notify} />
+      <h3 className="adm-h3">Change password</h3>
       <form onSubmit={(e) => void submit(e)} className="adm-stack">
         <label className="adm-field">
-          <span className="adm-label">New password</span>
-          <input className="adm-input" type="password" autoComplete="new-password" value={pw} onChange={(e) => setPw(e.target.value)} />
+          <span className="adm-label">New password (10+ characters)</span>
+          <PasswordInput value={pw} onChange={setPw} autoComplete="new-password" />
         </label>
         <label className="adm-field">
           <span className="adm-label">Type it again</span>
-          <input className="adm-input" type="password" autoComplete="new-password" value={pw2} onChange={(e) => setPw2(e.target.value)} />
+          <PasswordInput value={pw2} onChange={setPw2} autoComplete="new-password" />
         </label>
         {error && <p className="adm-error" role="alert">{error}</p>}
         <div className="adm-actions">

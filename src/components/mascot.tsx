@@ -10,6 +10,7 @@ const FUR: Record<Animal, { fur: string; inner: string; muzzle: string }> = {
   bear: { fur: '#B98266', inner: '#E3B6A0', muzzle: '#F2D9C6' },
   bunny: { fur: '#FFF6F1', inner: '#F6C6D2', muzzle: '#FFFFFF' },
   cat: { fur: '#F3D5B5', inner: '#F6B9C6', muzzle: '#FFF4E8' },
+  dog: { fur: '#EBCBA3', inner: '#C99A6C', muzzle: '#FFF3E2' },
 };
 
 export const animalName: Record<Animal, string> = {
@@ -17,6 +18,7 @@ export const animalName: Record<Animal, string> = {
   bear: 'little bear',
   bunny: 'bunny',
   cat: 'kitten',
+  dog: 'puppy',
 };
 
 /** The head only. Drawn around the point (100, 85). */
@@ -42,6 +44,12 @@ export function Face({
             <ellipse cx="122" cy="26" rx="13" ry="34" fill={c.fur} stroke={OUT} strokeWidth="2" />
             <ellipse cx="122" cy="28" rx="6.5" ry="24" fill={c.inner} />
           </g>
+        </>
+      )}
+      {animal === 'dog' && (
+        <>
+          <ellipse cx="54" cy="78" rx="15" ry="31" fill={c.inner} stroke={OUT} strokeWidth="2" transform="rotate(14 54 78)" />
+          <ellipse cx="146" cy="78" rx="15" ry="31" fill={c.inner} stroke={OUT} strokeWidth="2" transform="rotate(-14 146 78)" />
         </>
       )}
       {animal === 'cat' && (
@@ -86,6 +94,8 @@ export function Face({
       {/* nose */}
       {animal === 'teddy' || animal === 'bear' ? (
         <ellipse cx="100" cy="94" rx="6.4" ry="4.4" fill={P.wine} />
+      ) : animal === 'dog' ? (
+        <ellipse cx="100" cy="93" rx="7.5" ry="5.2" fill={INK} />
       ) : animal === 'cat' ? (
         <path d="M94.5 92.5 h11 l-5.5 6.5 z" fill="#E58AA2" stroke="#E58AA2" strokeWidth="2" strokeLinejoin="round" />
       ) : (
@@ -100,6 +110,8 @@ export function Face({
         strokeWidth="2.2"
         strokeLinecap="round"
       />
+
+      {animal === 'dog' && <path d="M95 107 q5 11 10 0 z" fill="#F08FA3" stroke={OUT} strokeWidth="1.2" strokeLinejoin="round" />}
 
       {animal === 'cat' && (
         <g stroke={P.brown} strokeWidth="1.6" strokeLinecap="round" opacity="0.7">
@@ -155,6 +167,9 @@ export function Mascot({
       <ellipse cx="76" cy="216" rx="9" ry="5.5" fill={c.inner} />
       <ellipse cx="124" cy="216" rx="9" ry="5.5" fill={c.inner} />
 
+      {animal === 'dog' && (
+        <path d="M138 198 q26 -2 24 -26" fill="none" stroke={c.fur} strokeWidth="12" strokeLinecap="round" />
+      )}
       {animal === 'cat' && (
         <path d="M138 196 q36 2 30 -34" fill="none" stroke={c.fur} strokeWidth="13" strokeLinecap="round" />
       )}

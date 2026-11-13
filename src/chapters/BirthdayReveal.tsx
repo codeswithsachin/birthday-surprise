@@ -9,7 +9,7 @@ import { Rise, SplitText } from '../components/Text';
 import { content, fill } from '../content';
 import type { Animal } from '../content';
 
-const PARTNER: Record<Animal, Animal> = { teddy: 'bunny', bear: 'cat', bunny: 'teddy', cat: 'bunny' };
+const PARTNER: Record<Animal, Animal> = { teddy: 'bunny', bear: 'cat', bunny: 'teddy', cat: 'bunny', dog: 'cat' };
 
 export default function BirthdayReveal({ onNext }: ChapterProps) {
   const r = content.reveal;

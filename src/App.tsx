@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Suspense, lazy, useCallback, useEffect, useRef, useState, type ComponentType } from 'react';
 import { useMusic } from './audio';
 import type { ChapterProps } from './components/Chapter';
+import Ambient from './components/Ambient';
 import { BottomBar, ChapterMenu, TopBar } from './components/Shell';
 import { content } from './content';
 import { usePrefs } from './prefs';
@@ -16,6 +17,7 @@ const LOADERS: (() => Promise<ChapterModule>)[] = [
   () => import('./chapters/QualitiesScrapbook'),
   () => import('./chapters/ScrapbookGallery'),
   () => import('./chapters/WishesChapter'),
+  () => import('./chapters/PoemsChapter'),
   () => import('./chapters/InteractiveLetters'),
   () => import('./chapters/MiniGames'),
   () => import('./chapters/BirthdayCake'),
@@ -26,7 +28,7 @@ const LOADERS: (() => Promise<ChapterModule>)[] = [
 ];
 const CHAPTERS = LOADERS.map((load) => lazy(load));
 const TOTAL = CHAPTERS.length;
-const DARK_CHAPTER = 10;
+const DARK_CHAPTER = 11;
 
 interface AppProps {
   /** used by the admin live preview, so a refresh keeps the same chapter */
@@ -87,6 +89,7 @@ export default function App({ startAt = 0, onIndexChange }: AppProps = {}) {
   return (
     <div
       className={`app ${dark ? 'is-dark' : ''}`}
+      data-theme={content.theme.pack}
       style={accent ? ({ ['--rose' as string]: accent } as React.CSSProperties) : undefined}
     >
       <main className="stage">
@@ -124,6 +127,7 @@ export default function App({ startAt = 0, onIndexChange }: AppProps = {}) {
         />
       )}
       <ChapterMenu open={menu} onClose={closeMenu} index={index} visited={visited} onPick={go} />
+      <Ambient />
       <div className="grain" aria-hidden="true" />
     </div>
   );
