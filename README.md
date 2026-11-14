@@ -64,14 +64,10 @@ Then open http://localhost:5173/admin
 ## Hardest problem
 
 - Problem: after I built the new admin, the live site still showed the old login page.
-- Fixed by: pushing the new code to GitHub. Vercel builds only what is on GitHub, not what is on my laptop.
-- Learned: a change is not live until it is committed, pushed and the Vercel deploy has finished.
 
 ## Limits and next
 
 - Not done: no automated tests.
-- Not done: forgot-password e-mails use the free Supabase sender, which allows only a few e-mails per hour.
-- Not done: the ready-made lines and poems are English only.
 - Next: add a custom e-mail sender and a short tutorial for new users of the admin.
 
 ## Author
