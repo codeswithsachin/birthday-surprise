@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Instagram, ListChecks, RotateCcw } from 'lucide-react';
+import { Github, ListChecks, RotateCcw } from 'lucide-react';
 import { Chapter, type ChapterProps } from '../components/Chapter';
 import { Floaters, Twinkles } from '../components/Floaters';
 import { Mascot } from '../components/mascot';
@@ -45,9 +45,9 @@ export default function FinalMessage({ onReplay, onMenu }: ChapterProps) {
       </motion.div>
       <motion.div className="final-sign" {...fade(f.paragraphs.length + 2)}>
         <p className="hand">{fill(f.signature)}</p>
-        {content.instagram && (
-          <a className="ig-link" href={content.instagramUrl} target="_blank" rel="noopener noreferrer">
-            <Instagram size={16} aria-hidden="true" /> {content.instagram}
+        {content.creatorHandle && (
+          <a className="ig-link" href={content.creatorUrl} target="_blank" rel="noopener noreferrer">
+            <Github size={16} aria-hidden="true" /> {content.creatorHandle}
           </a>
         )}
       </motion.div>

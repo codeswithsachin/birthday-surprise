@@ -13,8 +13,8 @@ export default function Landing() {
         <p>If someone sent you a private link, open that link to see your surprise.</p>
         <p className="gate-foot">
           Made by{' '}
-          <a href="https://instagram.com/nyxsachin" target="_blank" rel="noopener noreferrer">
-            nyxsachin
+          <a href="https://github.com/sachinkrcodes" target="_blank" rel="noopener noreferrer">
+            sachinkrcodes
           </a>
         </p>
       </div>

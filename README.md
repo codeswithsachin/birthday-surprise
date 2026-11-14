@@ -1,159 +1,81 @@
-# A Little World Made Just for You (multi-person edition)
+# Birthday Surprise
 
-An interactive birthday surprise website with 13 animated chapters, now a small **platform**:
-you log in to a private admin panel, create one page per person, upload photos and music,
-and send each person their own secret link. Built with React, TypeScript, Vite and Framer Motion.
-Data lives in Supabase (free plan is enough). Vercel only hosts the static site.
-Created by Sachin, Instagram [@nyxsachin](https://instagram.com/nyxsachin).
+Website that makes a private birthday page for each person: 14 animated chapters, photos, music and wishes, with an admin panel to create and edit every page.
 
-How it works in one minute:
+- **Status:** in progress
+- **Live:** [happiiee-bday.vercel.app](https://happiiee-bday.vercel.app)
+- **Built:** November 2026
+- **Keywords:** React, TypeScript, Vite, Framer Motion, Supabase, PostgreSQL, Row Level Security, Vercel
 
-* `https://your-site.vercel.app/w/aanya-k7x2m` is the surprise page for one person (hard-to-guess link).
-* `https://your-site.vercel.app/admin` is your private admin panel (login needed).
-* `https://your-site.vercel.app/` is a tiny neutral page. Search engines are told not to index anything.
-* `src/content.ts` is still the **default template**. Whatever you type in the admin panel is stored in the
-  database and laid over those defaults.
+## Highlights
 
----
+- Built 14 chapters (opening, letters, gallery, games, cake, wishes, poems and more) that play one after another.
+- Added 15 look packs (cat, dog, fish, mountain, ice, jungle, maple, anime, galaxy and 6 flower packs) that change colours and the floating decorations. The admin picks one per person.
+- Built an admin panel: one page per person, photo and music upload, a ready-made library of English lines, and a share panel with a QR code.
+- Locked each page behind a hard-to-guess link, with an optional PIN, a date when it opens and a date when it expires.
+- Secured the admin with Supabase login, authenticator-app two-step code, forgot password and Row Level Security.
 
-## Setup for a beginner (about 20 minutes)
+## Screenshots
 
-### Step 1. Install the tools
+![Opening scene of a birthday page](docs/screenshots/01-opening.png)
 
-1. Install Node.js 18 or newer from https://nodejs.org (choose LTS).
-2. Open the project folder in VS Code, open the terminal (Ctrl + `) and run:
+Opening scene, shown with a test name ("GitHub").
 
-       npm install
+![Chapter with five letters to open](docs/screenshots/02-letters.png)
 
-### Step 2. Create the Supabase project (free)
+Chapter 8: "open when" letters, with the fish and shell look pack.
 
-1. Go to https://supabase.com, sign in with GitHub, click **New project**.
-2. Give it a name, set a database password (save it somewhere), choose the nearest region, click **Create**.
-3. Wait one or two minutes until it is ready.
+![Chapter with the birthday cake and candles](docs/screenshots/03-cake.png)
 
-### Step 3. Create the database tables
+Chapter 10: make a wish and blow out the candles.
 
-1. In Supabase click **SQL Editor** (left menu), then **New query**.
-2. Open `supabase/schema.sql` from this project, copy everything, paste it, click **Run**.
-   You should see "Success". It is safe to run again later.
-3. The admin email is already set to `sachinkrcodes@gmail.com`. To use another email, change it in the
-   `is_admin()` function near the top of the file (one place only) before you run it.
+![Admin page editor, Basics section](docs/screenshots/04-editor.png)
 
-### Step 4. Create your admin account, then lock signups
+Admin: editing one page. The checklist on top shows what is still missing.
 
-1. Supabase, **Authentication**, **Users**, **Add user**, **Create new user**.
-   Use the SAME email as in `is_admin()`, choose a strong password, and tick **Auto Confirm User**.
-2. Then go to **Authentication**, **Sign In / Providers** (older dashboards: Settings) and turn **OFF**
-   "Allow new users to sign up". Now nobody else can ever create an account.
+![Admin dashboard](docs/screenshots/05-dashboard.png)
 
-### Step 5. Connect the website to Supabase
+Admin dashboard: counts, search, filters and the list of pages (empty state shown).
 
-1. Supabase, **Project Settings**, **API**. Copy the **Project URL** and the **anon public** key.
-   Never copy or use the `service_role` key anywhere in this project.
-2. In the project folder copy `.env.example` to `.env.local` and fill in:
+## Tech
 
-       VITE_SUPABASE_URL=https://xxxxxxxx.supabase.co
-       VITE_SUPABASE_ANON_KEY=eyJ...your anon key...
+- React 18, TypeScript and Vite: one single-page app for the admin and the birthday pages.
+- Framer Motion: the chapter animations.
+- Supabase (PostgreSQL, Auth, Storage): pages, photos and music are stored here, and the admin login runs on it.
+- Vercel: hosts the built site.
 
-3. Run `npm run dev` and open http://localhost:5173/admin. Log in. Press **New page**.
+## Run it
 
-### Step 6. Put it online with Vercel
+- Needs: Node 18 or newer, a free Supabase project
+- Tested on: Windows, Chrome, live deploy on Vercel
 
-1. Push the project to GitHub (private repository is best).
-2. On https://vercel.com, **Add New, Project**, import the repository.
-3. Before clicking Deploy, open **Environment Variables** and add the same two values
-   (`VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`).
-4. Click **Deploy**. Your admin panel is at `https://YOUR-SITE.vercel.app/admin`.
+```bash
+git clone https://github.com/sachinkrcodes/birthday-surprise.git
+cd birthday-surprise
+npm install
+copy .env.example .env.local
+npm run dev
+```
 
-Changed an environment variable later? Redeploy, because Vite bakes them in at build time.
+Before `npm run dev`: run `supabase/schema.sql` in the Supabase SQL Editor and put the project URL and the public anon key in `.env.local`. Full steps are in [docs/SETUP.md](docs/SETUP.md).
 
----
+Then open http://localhost:5173/admin
 
-## Using the admin panel
+## Hardest problem
 
-1. **New page**, type the name. A draft with a random link is created.
-2. Edit the sections (Basics, Letter, Wishes, Open-when letters, Final note, Gift, Photos, Music, Settings).
-   Every field starts with the default text. **Reset to default** appears when you change one.
-3. **Live preview** shows your unsaved changes in a phone or desktop frame. It never counts as a view.
-4. **Save changes**, then **Publish**. Drafts cannot be opened by anyone.
-5. **Share**: copy the link, send on WhatsApp, or download the QR code.
+- Problem: after I built the new admin, the live site still showed the old login page.
+- Fixed by: pushing the new code to GitHub. Vercel builds only what is on GitHub, not what is on my laptop.
+- Learned: a change is not live until it is committed, pushed and the Vercel deploy has finished.
 
-Other things you can do: unlock date/time (visitor sees a countdown, using server time), secret PIN
-(checked on the server, 5 wrong tries = 5 minute pause), expiry date, Duplicate (photos are copied),
-Export / Import JSON as a backup, Delete (also removes the photos and music from storage).
+## Limits and next
 
-Photos: up to 12, resized to 1400 px and saved as WebP (JPEG on browsers that cannot make WebP).
-Music: built-in music box, an MP3 up to 8 MB (you must tick "I have the right to use this song"),
-or a direct link to an audio file. Music never autoplays.
+- Not done: no automated tests.
+- Not done: forgot-password e-mails use the free Supabase sender, which allows only a few e-mails per hour.
+- Not done: the ready-made lines and poems are English only.
+- Next: add a custom e-mail sender and a short tutorial for new users of the admin.
 
-## Themes, poems and wishes (admin)
+## Author
 
-* **Look and feel**: pick a theme (classic rose, cat, dog, ocean and fish, mountains, ice and snow, jungle,
-  maple leaves, anime and sakura, galaxy, flower garden, roses, sunflowers, tulips, lotus). It changes the
-  colours of every chapter and adds slow floating decorations. You can also choose how many float, turn the
-  tap-to-pop emojis on or off, and pick a mascot (teddy, bear, bunny, kitten, puppy).
-* **Wishes**: write your own, or press "Add ready-made wishes".
-* **Poems and lines**: a new chapter. Add your own poems, lines and wishes, or pick from the ready-made English library.
-  Use `{name}` for the person's name.
-* People who turned on "reduce motion" in their phone settings see no floating decorations.
+Sachin Kumar | [GitHub](https://github.com/sachinkrcodes) | [LinkedIn](https://www.linkedin.com/in/sachinkrcodes) | Portfolio: [sachinkrcodes.vercel.app](https://sachinkrcodes.vercel.app) | sachinkrcodes@gmail.com
 
-## Two-step login and forgot password
-
-**Turn on the authenticator code (recommended)**
-1. Supabase, **SQL Editor**, **New query**. Paste the file `supabase/two-step.sql`, click **Run**. (Do this once.)
-2. Open `/admin`, log in, click **Account**, **Two-step verification**, **Turn on**.
-3. Install Google Authenticator (or Microsoft Authenticator) on your phone, scan the QR code, type the 6-digit code.
-4. Save the secret key shown under the QR (a screenshot in a safe place is fine). It is your backup.
-5. Test in a private/incognito window: password, then code. Only then close your normal window.
-
-From then on the database itself refuses admin actions unless the code step was passed.
-
-**If you lose your phone:** Supabase, SQL Editor, run
-`delete from auth.mfa_factors where user_id = (select id from auth.users where email = 'YOUR_ADMIN_EMAIL');`
-Then log in with the password only and turn two-step on again.
-
-**Forgot password setup (once):** Supabase, **Authentication**, **URL Configuration**.
-Set **Site URL** to your live address (for example `https://birthday-sachinkrcodes.vercel.app`) and add these under **Redirect URLs**:
-`https://birthday-sachinkrcodes.vercel.app/admin` and `http://localhost:5173/admin`.
-Supabase's built-in email sends only 2 emails per hour for the whole project, so use "Forgot password?" sparingly.
-If two-step is ON, the reset link also asks for the 6-digit code before you can set a new password.
-
-## Security notes (honest version)
-
-* The anon key is public by design. What protects your data is Row Level Security in `schema.sql`:
-  visitors cannot read the `pages` table at all. They can only call `get_page(slug, pin)`, which returns
-  one published, unlocked, unexpired page and never returns the PIN.
-* Only the admin email can create, edit, list or delete pages and files.
-* The storage bucket is public for reading: anyone who has an exact photo link can see that photo,
-  but nobody can list the files. Photo names are random.
-* A link is a secret only as long as you keep it private. Anyone with the link (and PIN) can open the page.
-* The PIN is 4 to 8 digits, so it is a light lock, not strong security.
-
-## Customizing the defaults
-
-Open `src/content.ts`. Every default text lives there. The admin panel edits a page's own copy on top of it.
-Branding (creator name and Instagram) is fixed in `content.ts` and is not changed per page.
-
-## Accessibility and comfort
-
-* Buttons work with keyboard and touch. Arrow keys move between chapters.
-* "Calm mode" (top right) skips animations. The site also follows the device's reduced-motion setting.
-* No analytics, no tracking, no paid services.
-
-## Project structure
-
-    supabase/schema.sql      tables, security rules, functions, storage
-    src/main.tsx             routes: /w/:slug, /admin, /
-    src/loadContent.ts       loads a page and merges it over content.ts
-    src/lib/                 Supabase client, safe merge, slug maker, types
-    src/pages/               loading, countdown, PIN, "no longer here" screens
-    src/admin/               admin panel (separate chunk, visitors never download it)
-    src/content.ts           default template (all text)
-    src/chapters/            the 13 chapters (lazy loaded)
-
-## Troubleshooting
-
-* **Admin says "Setup needed"**: the two environment variables are missing. Restart `npm run dev` after creating `.env.local`.
-* **"No access"**: you logged in with an email that is not in `is_admin()`.
-* **Upload fails**: check that `schema.sql` ran fully (it creates the `birthday-media` bucket and its rules).
-* **A link shows "no longer here"**: the page is still a draft, expired, or the link is mistyped.
+MIT License. See [LICENSE](LICENSE).

@@ -5,7 +5,7 @@ import { MAX_PHOTOS, type JsonObject, type JsonValue } from './types';
    Anything with the wrong type, an unknown key or an unsafe link is dropped,
    so a broken or hostile JSON can never break the page. */
 
-const BLOCKED_TOP = new Set(['recipientName', 'birthdayDate', 'creatorName', 'instagram', 'instagramUrl', 'music']);
+const BLOCKED_TOP = new Set(['recipientName', 'birthdayDate', 'creatorName', 'creatorHandle', 'creatorUrl', 'instagram', 'instagramUrl', 'music']);
 const RELATIONSHIPS = ['partner', 'crush', 'best-friend', 'someone-special'];
 const ANIMALS = ['teddy', 'bunny', 'cat', 'bear', 'dog'];
 const PACKS = ['classic', 'cat', 'dog', 'fish', 'mountain', 'ice', 'jungle', 'maple', 'anime', 'galaxy', 'garden', 'rose', 'sunflower', 'tulip', 'lotus'];

@@ -36,8 +36,8 @@ export const content = {
   nickname: '', // optional cute nickname, used in a few small places
   birthdayDate: '', // optional, for example '18 October'. Leave '' to hide it.
   creatorName: 'Sachin',
-  instagram: '@nyxsachin',
-  instagramUrl: 'https://instagram.com/nyxsachin',
+  creatorHandle: '@sachinkrcodes',
+  creatorUrl: 'https://github.com/sachinkrcodes',
 
   /* partner or crush adds your optional romantic paragraph to the letter.
      best-friend or someone-special keeps everything warm but platonic. */
